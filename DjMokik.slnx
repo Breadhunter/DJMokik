@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="DjMokik/DjMokik.vcxproj" Id="1042f246-ea79-443d-b58b-d410f29119a4" />
+</Solution>
