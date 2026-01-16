@@ -1,25 +1,38 @@
+#include "Window.h"
+#include <iostream>
 
-#include "window.h"
-
-Window::Window(int w, int h, const std::string& title) {
-    glfwInit();
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    handle = glfwCreateWindow(w, h, title.c_str(), nullptr, nullptr);
-}
+Window::Window() {}
 
 Window::~Window() {
-    glfwDestroyWindow(handle);
-    glfwTerminate();
+    if (window) {
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
+}
+
+bool Window::init(int width, int height, const std::string& title) {
+    if (!glfwInit()) {
+        std::cerr << "Failed to init GLFW\n";
+        return false;
+    }
+
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+    window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    return window != nullptr;
 }
 
 bool Window::shouldClose() {
-    return glfwWindowShouldClose(handle);
+    return glfwWindowShouldClose(window);
 }
 
-void Window::poll() {
+void Window::pollEvents() {
     glfwPollEvents();
 }
 
-GLFWwindow* Window::get() {
-    return handle;
+void Window::cleanup() {
+    if (window) {
+        glfwDestroyWindow(window);
+        window = nullptr;
+    }
 }

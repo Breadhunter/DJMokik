@@ -130,24 +130,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DjMokik.cpp" />
-    <ClCompile Include="VulkanContext.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="VulkanCommand.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
     <ClCompile Include="VulkanInstance.cpp" />
     <ClCompile Include="VulkanPhysicalDevice.cpp" />
+    <ClCompile Include="VulkanPipeline.cpp" />
     <ClCompile Include="VulkanRenderer.cpp" />
+    <ClCompile Include="VulkanRenderPass.cpp" />
+    <ClCompile Include="VulkanRenderPass.h" />
     <ClCompile Include="VulkanSurface.cpp" />
     <ClCompile Include="VulkanSwapchain.cpp" />
+    <ClCompile Include="VulkanSync.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VulkanContext.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="VulkanCommand.h" />
     <ClInclude Include="VulkanDevice.h" />
     <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="VulkanPhysicalDevice.h" />
+    <ClInclude Include="VulkanPipeline.h" />
     <ClInclude Include="VulkanRenderer.h" />
     <ClInclude Include="VulkanSurface.h" />
     <ClInclude Include="VulkanSwapchain.h" />
+    <ClInclude Include="VulkanSync.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

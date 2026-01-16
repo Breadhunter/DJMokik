@@ -1,27 +1,37 @@
-
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 #include "VulkanInstance.h"
+#include <iostream>
 
-VulkanInstance::VulkanInstance() {
-    VkApplicationInfo app{};
-    app.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+bool VulkanInstance::init(const std::string& appName) {
+    VkApplicationInfo appInfo{};
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.pApplicationName = appName.c_str();
+    appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.pEngineName = "No Engine";
+    appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+    appInfo.apiVersion = VK_API_VERSION_1_0;
 
-    VkInstanceCreateInfo info{};
-    info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    info.pApplicationInfo = &app;
+    VkInstanceCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    createInfo.pApplicationInfo = &appInfo;
 
-    uint32_t count;
-    const char** ext = glfwGetRequiredInstanceExtensions(&count);
+    // Подключаем расширения GLFW
+    uint32_t extCount = 0;
+    const char** extensions = glfwGetRequiredInstanceExtensions(&extCount);
+    createInfo.enabledExtensionCount = extCount;
+    createInfo.ppEnabledExtensionNames = extensions;
 
-    info.enabledExtensionCount = count;
-    info.ppEnabledExtensionNames = ext;
+    if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+        std::cerr << "Failed to create Vulkan instance\n";
+        return false;
+    }
 
-    vkCreateInstance(&info, nullptr, &instance);
+    return true;
 }
 
-VulkanInstance::~VulkanInstance() {
-    vkDestroyInstance(instance, nullptr);
-}
-
-VkInstance VulkanInstance::get() {
-    return instance;
+void VulkanInstance::cleanup() {
+    if (instance != VK_NULL_HANDLE) {
+        vkDestroyInstance(instance, nullptr);
+    }
 }

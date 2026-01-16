@@ -1,16 +1,15 @@
-
 #pragma once
-#include <vulkan/vulkan.h>
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 class VulkanSurface {
 public:
-    VulkanSurface(VkInstance instance, GLFWwindow* window);
-    ~VulkanSurface();
+    bool init(VkInstance instance, GLFWwindow* window);
+    void cleanup(VkInstance instance);
 
-    VkSurfaceKHR get();
+    VkSurfaceKHR get() const { return surface; }
 
 private:
-    VkInstance instance;
-    VkSurfaceKHR surface{};
+    VkSurfaceKHR surface = VK_NULL_HANDLE;
 };

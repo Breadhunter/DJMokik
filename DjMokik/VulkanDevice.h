@@ -1,16 +1,18 @@
-
 #pragma once
 #include <vulkan/vulkan.h>
 
 class VulkanDevice {
 public:
-    VulkanDevice(VkPhysicalDevice physical);
-    ~VulkanDevice();
+    VulkanDevice() = default;
+    ~VulkanDevice() = default;
 
-    VkDevice get();
-    VkQueue queue();
+    // ќбъ€влени€ функций Ч только подписи
+    bool init(VkInstance instance, VkSurfaceKHR surface);
+    void cleanup();
+
+    VkDevice getDevice() const { return device; }
 
 private:
-    VkDevice device{};
-    VkQueue graphicsQueue{};
+    VkDevice device = VK_NULL_HANDLE;
+    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 };

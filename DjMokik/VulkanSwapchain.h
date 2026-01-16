@@ -1,26 +1,14 @@
-#pragma once
+﻿#pragma once
 #include <vulkan/vulkan.h>
-#include <vector>
 
 class VulkanSwapchain {
 public:
-    VulkanSwapchain(VkPhysicalDevice physical, VkDevice device, VkSurfaceKHR surface);
-    ~VulkanSwapchain();
+    bool init(VkDevice device, VkSurfaceKHR surface);
+    void cleanup(VkDevice device);
 
-    VkSwapchainKHR get() { return swap; }
-
-    VkFormat getFormat() { return fmt; }
-
-    VkExtent2D getExtent() { return ext; }
-
-    std::vector<VkImageView>& getImageViews() { return imageViews; }
+    VkSwapchainKHR get() const { return swapchain; } // <-- добавлено
+    uint32_t getImageCount() const { return 2; }     // заглушка для компиляции
 
 private:
-    VkDevice device;
-    VkSwapchainKHR swap;
-
-    VkFormat fmt;
-    VkExtent2D ext;
-
-    std::vector<VkImageView> imageViews;
+    VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 };

@@ -1,15 +1,17 @@
-
 #pragma once
 #include <vulkan/vulkan.h>
-#include <GLFW/glfw3.h>
+#include <vector>
+#include <string>
 
 class VulkanInstance {
 public:
-    VulkanInstance();
-    ~VulkanInstance();
+    bool init(const std::string& appName);
+    void cleanup();
 
-    VkInstance get();
+    VkInstance get() const { return instance; }
+    VkDevice getDevice() const { return device; }  // <-- добавлено
 
 private:
-    VkInstance instance{};
+    VkInstance instance = VK_NULL_HANDLE;
+    VkDevice device = VK_NULL_HANDLE;
 };

@@ -1,16 +1,16 @@
-
-#include "window.h"
-#include "VulkanContext.h"
+﻿#include "Application.h"
+#include <iostream>
 
 int main() {
-    Window window(800, 600, "Vulkan Modular");
+    Application app;
 
-    VulkanContext context(window.get());
-
-    while (!window.shouldClose()) {
-        window.poll();
-        context.draw();
+    if (!app.init()) {
+        std::cerr << "Failed to initialize application!" << std::endl;
+        return -1;
     }
 
-    context.waitIdle();
+    app.run();
+    app.cleanup();
+
+    return 0;
 }

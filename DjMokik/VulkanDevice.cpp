@@ -1,31 +1,24 @@
+﻿#include "VulkanDevice.h"
+#include <iostream>
 
-#include "VulkanDevice.h"
+bool VulkanDevice::init(VkInstance instance, VkSurfaceKHR surface) {
+    // Пример инициализации: просто для компиляции
+    // Здесь будет реальная логика выбора физического устройства и создания VkDevice
 
-VulkanDevice::VulkanDevice(VkPhysicalDevice physical) {
-    float priority = 1.0f;
+    std::cout << "VulkanDevice::init called\n";
 
-    VkDeviceQueueCreateInfo q{};
-    q.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    q.queueFamilyIndex = 0;
-    q.queueCount = 1;
-    q.pQueuePriorities = &priority;
+    // На самом деле нужно проверить устройства, их свойства, создать VkDevice и т.д.
+    device = VK_NULL_HANDLE; // Заглушка
+    physicalDevice = VK_NULL_HANDLE; // Заглушка
 
-    const char* ext[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-
-    VkDeviceCreateInfo info{};
-    info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    info.queueCreateInfoCount = 1;
-    info.pQueueCreateInfos = &q;
-    info.enabledExtensionCount = 1;
-    info.ppEnabledExtensionNames = ext;
-
-    vkCreateDevice(physical, &info, nullptr, &device);
-    vkGetDeviceQueue(device, 0, 0, &graphicsQueue);
+    return true; // Вернуть true, если все прошло успешно
 }
 
-VulkanDevice::~VulkanDevice() {
-    vkDestroyDevice(device, nullptr);
+void VulkanDevice::cleanup() {
+    // Пример очистки
+    if (device != VK_NULL_HANDLE) {
+        vkDestroyDevice(device, nullptr);
+        device = VK_NULL_HANDLE;
+    }
+    std::cout << "VulkanDevice::cleanup called\n";
 }
-
-VkDevice VulkanDevice::get() { return device; }
-VkQueue VulkanDevice::queue() { return graphicsQueue; }

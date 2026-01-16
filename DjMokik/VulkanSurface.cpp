@@ -1,15 +1,17 @@
-
 #include "VulkanSurface.h"
+#include <iostream>
 
-VulkanSurface::VulkanSurface(VkInstance inst, GLFWwindow* window) {
-    instance = inst;
-    glfwCreateWindowSurface(instance, window, nullptr, &surface);
+bool VulkanSurface::init(VkInstance instance, GLFWwindow* window) {
+    if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
+        std::cerr << "Failed to create Vulkan surface!" << std::endl;
+        return false;
+    }
+    return true;
 }
 
-VulkanSurface::~VulkanSurface() {
-    vkDestroySurfaceKHR(instance, surface, nullptr);
-}
-
-VkSurfaceKHR VulkanSurface::get() {
-    return surface;
+void VulkanSurface::cleanup(VkInstance instance) {
+    if (surface != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+        surface = VK_NULL_HANDLE;
+    }
 }

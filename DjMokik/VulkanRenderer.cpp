@@ -1,22 +1,23 @@
 #include "VulkanRenderer.h"
+#include <vulkan/vulkan.h>
 
-VulkanRenderer::VulkanRenderer(
-    VkDevice dev,
-    VkSwapchainKHR sw,
-    std::vector<VkImageView>& imageViews,
-    VkFormat fmt,
-    VkExtent2D ext,
-    VkQueue q
-) {
-    device = dev;
-    swapchain = sw;
-    views = imageViews;
-    queue = q;
-}
-
-VulkanRenderer::~VulkanRenderer() {
+bool VulkanRenderer::init(VulkanDevice& device, VulkanSwapchain& swapchain, VulkanCommand& command, VulkanSync& sync) {
+    this->device = &device;
+    this->swapchain = &swapchain;
+    this->command = &command;
+    this->sync = &sync;
+    return true;
 }
 
 void VulkanRenderer::drawFrame() {
-    // Заглушка
+    VkDevice vkDevice = device->getDevice();
+    VkSemaphore sem = sync->getImageAvailableSemaphore();
+    VkFence fence = sync->getInFlightFence();
+    vkWaitForFences(vkDevice, 1, &fence, VK_TRUE, UINT64_MAX);
+    vkResetFences(vkDevice, 1, &fence);
+
+    uint32_t imageIndex;
+    vkAcquireNextImageKHR(vkDevice, swapchain->get(), UINT64_MAX, sem, VK_NULL_HANDLE, &imageIndex);
 }
+
+void VulkanRenderer::cleanup() {}

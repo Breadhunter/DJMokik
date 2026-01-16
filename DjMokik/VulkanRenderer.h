@@ -1,25 +1,18 @@
 #pragma once
-#include <vulkan/vulkan.h>
-#include <vector>
+#include "VulkanDevice.h"
+#include "VulkanSwapchain.h"
+#include "VulkanCommand.h"
+#include "VulkanSync.h"
 
 class VulkanRenderer {
 public:
-    VulkanRenderer(
-        VkDevice device,
-        VkSwapchainKHR swapchain,
-        std::vector<VkImageView>& imageViews,
-        VkFormat format,
-        VkExtent2D extent,
-        VkQueue presentQueue
-    );
-
-    ~VulkanRenderer();
-
+    bool init(VulkanDevice& device, VulkanSwapchain& swapchain, VulkanCommand& command, VulkanSync& sync);
     void drawFrame();
+    void cleanup();
 
 private:
-    VkDevice device;
-    VkSwapchainKHR swapchain;
-    std::vector<VkImageView> views;
-    VkQueue queue;
+    VulkanDevice* device = nullptr;
+    VulkanSwapchain* swapchain = nullptr;
+    VulkanCommand* command = nullptr;
+    VulkanSync* sync = nullptr;
 };
