@@ -6,10 +6,14 @@ public:
     bool init(VkDevice device);
     void cleanup(VkDevice device);
 
-    VkSemaphore getImageAvailableSemaphore() const { return imageAvailableSemaphore; }
+    VkSemaphore getImageAvailable() const { return imageAvailable; }
+    VkSemaphore getRenderFinished() const { return renderFinished; }
     VkFence getInFlightFence() const { return inFlightFence; }
 
+
+
 private:
-    VkSemaphore imageAvailableSemaphore = VK_NULL_HANDLE;
+    VkSemaphore imageAvailable = VK_NULL_HANDLE;
+    VkSemaphore renderFinished = VK_NULL_HANDLE;
     VkFence inFlightFence = VK_NULL_HANDLE;
 };

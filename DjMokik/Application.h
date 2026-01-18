@@ -1,9 +1,6 @@
 #pragma once
-#include <string>
 #include "Window.h"
-#include "VulkanInstance.h"
-#include "VulkanSurface.h"
-#include "VulkanSwapchain.h"
+#include "Engine.h"
 
 class Application {
 public:
@@ -13,7 +10,5 @@ public:
 
 private:
     Window window;
-    VulkanInstance instance;
-    VulkanSurface surface;
-    VulkanSwapchain swapchain;
+    Engine engine;
 };

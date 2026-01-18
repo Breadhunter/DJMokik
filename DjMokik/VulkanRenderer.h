@@ -1,18 +1,36 @@
 #pragma once
-#include "VulkanDevice.h"
-#include "VulkanSwapchain.h"
-#include "VulkanCommand.h"
-#include "VulkanSync.h"
+
+#include "VulkanRenderContext.h"
+#include "VulkanMeshManager.h"
+#include "VulkanCommandRecorder.h"
+#include "VulkanFrameManager.h"
+#include "VulkanUniformBuffer.h"
+#include "Scene.h"
+#include "RenderObject.h"
 
 class VulkanRenderer {
 public:
-    bool init(VulkanDevice& device, VulkanSwapchain& swapchain, VulkanCommand& command, VulkanSync& sync);
-    void drawFrame();
+    bool init(VulkanRenderContext& ctx);
+
+    void drawScene(Scene& scene);
+
     void cleanup();
 
+    void rebuildRenderObjects(const Scene& scene);
+
+
+    VulkanMeshManager& getMeshManager();
+
+    VulkanRenderContext& getContext() {
+        return *context;
+    }
+
 private:
-    VulkanDevice* device = nullptr;
-    VulkanSwapchain* swapchain = nullptr;
-    VulkanCommand* command = nullptr;
-    VulkanSync* sync = nullptr;
+    VulkanRenderContext* context = nullptr;
+
+    VulkanMeshManager meshManager;
+    VulkanCommandRecorder recorder;
+    VulkanFrameManager frameManager;
+    std::vector<RenderObject> renderObjects;
+
 };

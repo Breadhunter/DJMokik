@@ -2,6 +2,10 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 #include "VulkanSwapchain.h"
+#include "VulkanRenderPass.h"
+#include "VulkanMesh.h"
+#include "RenderObject.h"
+
 
 class VulkanCommand {
 public:
@@ -9,6 +13,26 @@ public:
     void cleanup(VkDevice device);
 
     const std::vector<VkCommandBuffer>& getBuffers() const { return commandBuffers; }
+
+    VkCommandBuffer getCommandBuffer(uint32_t index) const {
+        if (index < commandBuffers.size())
+            return commandBuffers[index];
+
+        return VK_NULL_HANDLE;
+    }
+    bool recordCommands(
+        VulkanSwapchain& swapchain,
+        VkPipeline pipeline,
+        VkBuffer vertexBuffer
+    );
+
+    bool recordScene(
+        VulkanSwapchain& swapchain,
+        VkPipeline pipeline,
+        const std::vector<RenderObject>& objects
+    );
+
+
 
 private:
     VkCommandPool commandPool = VK_NULL_HANDLE;
