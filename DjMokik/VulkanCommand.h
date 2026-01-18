@@ -29,8 +29,10 @@ public:
     bool recordScene(
         VulkanSwapchain& swapchain,
         VkPipeline pipeline,
+        VkPipelineLayout layout,
         const std::vector<RenderObject>& objects
     );
+
 
 
 

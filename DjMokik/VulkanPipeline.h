@@ -10,6 +10,7 @@ public:
 
     VkPipeline get() const { return pipeline; }
     VkPipelineLayout getLayout() const { return layout; }
+    VkDescriptorSetLayout getDescriptorSetLayout() const {return descriptorSetLayout;}
     void createGraphicsPipeline() {};
 
 private:
@@ -17,4 +18,5 @@ private:
     VkPipelineLayout layout = VK_NULL_HANDLE;
     VkShaderModule createShaderModule(VkDevice device, const std::vector<char>& code);
     std::vector<char> readFile(const std::string& filename);
+    VkDescriptorSetLayout descriptorSetLayout = VK_NULL_HANDLE;
 };

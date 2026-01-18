@@ -20,6 +20,11 @@ bool VulkanRenderer::init(VulkanRenderContext& ctx) {
 
 void VulkanRenderer::drawScene(Scene& scene) {
 
+    // Если количество объектов изменилось – пересобрать renderObjects
+    if (renderObjects.size() != scene.getEntities().size()) {
+        rebuildRenderObjects(scene);
+    }
+
     if (renderObjects.empty()) {
         return;
     }
@@ -33,6 +38,8 @@ void VulkanRenderer::drawScene(Scene& scene) {
         context->getSwapchain().getExtent().width /
         (float)context->getSwapchain().getExtent().height;
 
+    size_t renderIndex = 0;
+
     for (size_t i = 0; i < scene.getEntities().size(); ++i) {
 
         Entity& entity = scene.getEntities()[i];
@@ -40,7 +47,7 @@ void VulkanRenderer::drawScene(Scene& scene) {
         if (!entity.mesh)
             continue;
 
-        RenderObject& ro = renderObjects[i];
+        RenderObject& ro = renderObjects[renderIndex++];
 
         UniformBufferObject ubo{};
 
@@ -65,6 +72,7 @@ void VulkanRenderer::drawScene(Scene& scene) {
         imageIndex
     );
 }
+
 
 
 

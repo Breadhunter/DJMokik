@@ -24,6 +24,8 @@ bool VulkanCommandRecorder::recordScene(
     return command->recordScene(
         swapchain,
         pipeline.get(),
+        pipeline.getLayout(),
         objects
     );
 }
+

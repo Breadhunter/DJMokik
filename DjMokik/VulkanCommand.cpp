@@ -108,6 +108,7 @@ bool VulkanCommand::recordCommands(
 bool VulkanCommand::recordScene(
     VulkanSwapchain& swapchain,
     VkPipeline pipeline,
+    VkPipelineLayout layout,
     const std::vector<RenderObject>& objects
 )
 {
@@ -126,6 +127,7 @@ bool VulkanCommand::recordScene(
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = swapchain.getRenderPass();
         renderPassInfo.framebuffer = swapchain.getFramebuffer((uint32_t)i);
+        renderPassInfo.renderArea.offset = { 0, 0 };
         renderPassInfo.renderArea.extent = swapchain.getExtent();
 
         VkClearValue clearColor = { {0.1f, 0.1f, 0.1f, 1.0f} };
@@ -137,7 +139,28 @@ bool VulkanCommand::recordScene(
 
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
-        // 🔥 ВОТ ЗДЕСЬ – рисуем ВСЕ объекты
+        // ---- ВОТ ГЛАВНОЕ ИСПРАВЛЕНИЕ ----
+
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = (float)swapchain.getExtent().width;
+        viewport.height = (float)swapchain.getExtent().height;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+
+        vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+        VkRect2D scissor{};
+        scissor.offset = { 0, 0 };
+        scissor.extent = swapchain.getExtent();
+
+        vkCmdSetScissor(cmd, 0, 1, &scissor);
+
+        vkCmdDraw(cmd, 3, 1, 0, 0);
+
+        // ----------------------------------
+
         for (auto& obj : objects) {
 
             VkBuffer buffers[] = { obj.mesh->getVertexBuffer() };
@@ -154,6 +177,9 @@ bool VulkanCommand::recordScene(
 
     return true;
 }
+
+
+
 
 
 

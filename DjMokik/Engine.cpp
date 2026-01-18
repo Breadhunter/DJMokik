@@ -1,25 +1,40 @@
 #include "Engine.h"
 #include "DemoSceneBuilder.h"
+#include <iostream>
 
 bool Engine::init(Window& window) {
 
-    if (!context.init(window))
-        return false;
+    std::cout << "Engine init start\n";
 
-    if (!renderer.init(context))
+    if (!context.init(window)) {
+        std::cout << "context.init failed\n";
         return false;
+    }
 
-    // ВАЖНО: вся логика создания контента теперь тут
+    std::cout << "context.init OK\n";
+
+    if (!renderer.init(context)) {
+        std::cout << "renderer.init failed\n";
+        return false;
+    }
+
+    std::cout << "renderer.init OK\n";
+
     DemoSceneBuilder::build(
         scene,
         renderer.getMeshManager(),
         renderer.getContext().getDevice()
     );
 
+    std::cout << "Scene built\n";
+
     renderer.rebuildRenderObjects(scene);
+
+    std::cout << "Render objects rebuilt\n";
 
     return true;
 }
+
 
 void Engine::run(Window& window) {
 
