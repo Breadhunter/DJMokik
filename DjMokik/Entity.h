@@ -7,6 +7,4 @@ class VulkanMesh;
 struct Entity {
     VulkanMesh* mesh = nullptr;
     Transform transform;
-
-    VulkanUniformBuffer ubo;
 };

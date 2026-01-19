@@ -19,6 +19,7 @@ public:
     void cleanup(VkDevice device);
 
     VkBuffer get() const { return buffer; }
+    VkDeviceMemory getMemory() const { return memory; }
 
 private:
     uint32_t findMemoryType(

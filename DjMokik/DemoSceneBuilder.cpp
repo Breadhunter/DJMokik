@@ -14,13 +14,13 @@ void DemoSceneBuilder::build(
     };
 
 
-    // Создадим 5 объектов, смещённых по Z
+    VulkanMesh& mesh = meshManager.createMesh(device, vertices);
 
     for (int i = 0; i < 5; i++) {
-        VulkanMesh& mesh = meshManager.createMesh(device, vertices);
+        
 
         Entity& e = scene.createEntity(mesh);
 
-        e.transform.position = { 0.0f, 0.0f, 0.0f };
+        e.transform.position = { i*0.3f, 0.0f, 0.0f };
     }
 }

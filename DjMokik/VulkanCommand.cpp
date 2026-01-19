@@ -43,67 +43,6 @@ void VulkanCommand::cleanup(VkDevice device) {
     }
 }
 
-bool VulkanCommand::recordCommands(
-    VulkanSwapchain& swapchain,
-    VkPipeline pipeline,
-    VkBuffer vertexBuffer
-) {
-    for (size_t i = 0; i < commandBuffers.size(); i++) {
-
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-        if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS)
-            return false;
-
-        VkRenderPassBeginInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapchain.getRenderPass();
-        renderPassInfo.framebuffer = swapchain.getFramebuffer(i);
-        renderPassInfo.renderArea.offset = { 0, 0 };
-        renderPassInfo.renderArea.extent = swapchain.getExtent();
-
-        VkClearValue clearColor = { {{0.14f, 0.88f, 0.88f, 1.0f}} };
-
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &clearColor;
-
-        vkCmdBeginRenderPass(
-            commandBuffers[i],
-            &renderPassInfo,
-            VK_SUBPASS_CONTENTS_INLINE
-        );
-
-        if (pipeline != VK_NULL_HANDLE) {
-
-            vkCmdBindPipeline(
-                commandBuffers[i],
-                VK_PIPELINE_BIND_POINT_GRAPHICS,
-                pipeline
-            );
-
-            VkBuffer buffers[] = { vertexBuffer };
-            VkDeviceSize offsets[] = { 0 };
-
-            vkCmdBindVertexBuffers(
-                commandBuffers[i],
-                0,
-                1,
-                buffers,
-                offsets
-            );
-
-            vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-        }
-
-        vkCmdEndRenderPass(commandBuffers[i]);
-
-        if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)
-            return false;
-    }
-
-    return true;
-}
 
 bool VulkanCommand::recordScene(
     VulkanSwapchain& swapchain,
@@ -167,6 +106,17 @@ bool VulkanCommand::recordScene(
             VkDeviceSize offsets[] = { 0 };
 
             vkCmdBindVertexBuffers(cmd, 0, 1, buffers, offsets);
+
+            vkCmdBindDescriptorSets(
+                cmd,
+                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                layout,
+                0,
+                1,
+                &obj.descriptorSet,
+                0,
+                nullptr
+            );
 
             vkCmdDraw(cmd, 3, 1, 0, 0);
         }

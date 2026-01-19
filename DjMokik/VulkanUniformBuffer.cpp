@@ -1,10 +1,24 @@
 #include "VulkanUniformBuffer.h"
 #include "VulkanDevice.h"
-#include <cstring>
+#include "VulkanBuffer.h"
 
 bool VulkanUniformBuffer::init(VulkanDevice& device) {
-    // Здесь будет создание VkBuffer с флагом UNIFORM_BUFFER
-    // (мы позже добавим полноценную реализацию через твой BufferUtils)
+
+    VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+    VulkanBuffer temp;
+
+    if (!temp.create(
+        device,
+        bufferSize,
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+    )) {
+        return false;
+    }
+
+    buffer = temp.get();
+    memory = temp.getMemory();
 
     return true;
 }
@@ -13,10 +27,18 @@ void VulkanUniformBuffer::update(
     VulkanDevice& device,
     const UniformBufferObject& ubo
 ) {
-    // маппинг памяти и копирование данных
+    void* data;
+    vkMapMemory(device.getDevice(), memory, 0, sizeof(ubo), 0, &data);
+    memcpy(data, &ubo, sizeof(ubo));
+    vkUnmapMemory(device.getDevice(), memory);
 }
 
 void VulkanUniformBuffer::cleanup(VkDevice device) {
-    vkDestroyBuffer(device, buffer, nullptr);
-    vkFreeMemory(device, memory, nullptr);
+    if (buffer) {
+        vkDestroyBuffer(device, buffer, nullptr);
+    }
+
+    if (memory) {
+        vkFreeMemory(device, memory, nullptr);
+    }
 }

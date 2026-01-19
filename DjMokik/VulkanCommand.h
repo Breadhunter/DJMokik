@@ -19,12 +19,7 @@ public:
             return commandBuffers[index];
 
         return VK_NULL_HANDLE;
-    }
-    bool recordCommands(
-        VulkanSwapchain& swapchain,
-        VkPipeline pipeline,
-        VkBuffer vertexBuffer
-    );
+    };
 
     bool recordScene(
         VulkanSwapchain& swapchain,

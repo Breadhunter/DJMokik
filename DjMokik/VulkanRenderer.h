@@ -7,6 +7,7 @@
 #include "VulkanUniformBuffer.h"
 #include "Scene.h"
 #include "RenderObject.h"
+#include "VulkanDescriptorPool.h"
 
 class VulkanRenderer {
 public:
@@ -32,5 +33,6 @@ private:
     VulkanCommandRecorder recorder;
     VulkanFrameManager frameManager;
     std::vector<RenderObject> renderObjects;
+    VulkanDescriptorPool descriptorPool;
 
 };

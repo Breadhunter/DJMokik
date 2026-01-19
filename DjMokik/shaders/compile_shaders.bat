@@ -1,0 +1,7 @@
+@echo off
+
+glslangValidator -V triangle.vert -o triangle.vert.spv
+glslangValidator -V triangle.frag -o triangle.frag.spv
+
+echo Shaders compiled
+pause

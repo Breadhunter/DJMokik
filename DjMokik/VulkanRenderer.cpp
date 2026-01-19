@@ -1,5 +1,6 @@
 ﻿#include "VulkanRenderer.h"
 #include <iostream>
+#include "VulkanDescriptorSetUtils.h"
 
 bool VulkanRenderer::init(VulkanRenderContext& ctx) {
 
@@ -13,6 +14,8 @@ bool VulkanRenderer::init(VulkanRenderContext& ctx) {
     recorder.init(ctx.getCommand());
 
     frameManager.init(ctx.getDevice(), 2);
+
+    descriptorPool.init(ctx.getDevice(), 100);
 
 
     return true;
@@ -91,6 +94,12 @@ void VulkanRenderer::rebuildRenderObjects(const Scene& scene) {
 
     renderObjects.clear();
 
+    uint32_t objectCount = scene.getEntities().size();
+
+    descriptorPool.cleanup(context->getDevice().getDevice());
+    descriptorPool.init(context->getDevice(), objectCount);
+
+
     for (const Entity& e : scene.getEntities()) {
 
         if (!e.mesh)
@@ -101,6 +110,21 @@ void VulkanRenderer::rebuildRenderObjects(const Scene& scene) {
 
         ro.ubo.init(context->getDevice());
 
+        ro.descriptorSet = descriptorPool.allocateDescriptorSet(
+            context->getDevice().getDevice(),
+            context->getPipeline().getDescriptorSetLayout()
+        );
+
+        descriptorPool.updateDescriptorSet(
+            context->getDevice().getDevice(),
+            ro.descriptorSet,
+            ro.ubo.getBuffer(),
+            sizeof(UniformBufferObject)
+        );
+
+
         renderObjects.push_back(std::move(ro));
     }
 }
+
+
