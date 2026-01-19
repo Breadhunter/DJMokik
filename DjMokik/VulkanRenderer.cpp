@@ -22,6 +22,7 @@ bool VulkanRenderer::init(VulkanRenderContext& ctx) {
 }
 
 void VulkanRenderer::drawScene(Scene& scene) {
+    globalTime += 0.016f; // примерно 60 FPS
 
     // Если количество объектов изменилось – пересобрать renderObjects
     if (renderObjects.size() != scene.getEntities().size()) {
@@ -127,5 +128,7 @@ void VulkanRenderer::rebuildRenderObjects(const Scene& scene) {
         renderObjects.push_back(std::move(ro));
     }
 }
+
+
 
 

@@ -1,5 +1,6 @@
 ﻿#include "VulkanCommand.h"
 #include "RenderObject.h"
+#include <GLFW/glfw3.h>
 
 bool VulkanCommand::init(VkDevice device, VulkanSwapchain& swapchain, uint32_t queueFamily) {
 
@@ -116,6 +117,16 @@ bool VulkanCommand::recordScene(
                 nullptr
             );
 
+            float time = (float)glfwGetTime();
+
+            vkCmdPushConstants(
+                cmd,
+                layout,
+                VK_SHADER_STAGE_FRAGMENT_BIT,
+                0,
+                sizeof(float),
+                &time
+            );
             vkCmdDraw(cmd, 3, 1, 0, 0);
         }
 

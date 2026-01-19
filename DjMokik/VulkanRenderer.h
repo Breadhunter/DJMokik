@@ -19,7 +19,6 @@ public:
 
     void rebuildRenderObjects(const Scene& scene);
 
-
     VulkanMeshManager& getMeshManager();
 
     VulkanRenderContext& getContext() {
@@ -34,5 +33,7 @@ private:
     VulkanFrameManager frameManager;
     std::vector<RenderObject> renderObjects;
     VulkanDescriptorPool descriptorPool;
+    Camera camera;
+    float globalTime = 0.0f;
 
 };
