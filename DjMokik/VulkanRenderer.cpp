@@ -62,6 +62,7 @@ void VulkanRenderer::drawScene(Scene& scene) {
     }
 
     recorder.recordScene(
+        context->getRenderPass().get(),
         context->getSwapchain(),
         context->getPipeline(),
         renderObjects

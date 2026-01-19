@@ -1,37 +1,41 @@
 #include "VulkanRenderPass.h"
-#include "VulkanDevice.h"
+#include <array>
 
-bool VulkanRenderPass::init(VulkanDevice& device, VkFormat imageFormat) {
+bool VulkanRenderPass::init(VkDevice dev, VkFormat color, VkFormat depth) {
 
-    VkAttachmentDescription colorAttachment{};
-    colorAttachment.format = imageFormat;
-    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentDescription colorAtt{};
+    colorAtt.format = color;
+    colorAtt.samples = VK_SAMPLE_COUNT_1_BIT;
+    colorAtt.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    colorAtt.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAtt.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-    VkAttachmentReference colorRef{};
-    colorRef.attachment = 0;
-    colorRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    VkAttachmentDescription depthAtt{};
+    depthAtt.format = depth;
+    depthAtt.samples = VK_SAMPLE_COUNT_1_BIT;
+    depthAtt.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depthAtt.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    VkSubpassDescription subpass{};
-    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpass.colorAttachmentCount = 1;
-    subpass.pColorAttachments = &colorRef;
+    VkAttachmentReference colorRef{ 0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
+    VkAttachmentReference depthRef{ 1, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
 
-    VkRenderPassCreateInfo info{};
-    info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    info.attachmentCount = 1;
-    info.pAttachments = &colorAttachment;
-    info.subpassCount = 1;
-    info.pSubpasses = &subpass;
+    VkSubpassDescription sub{};
+    sub.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    sub.colorAttachmentCount = 1;
+    sub.pColorAttachments = &colorRef;
+    sub.pDepthStencilAttachment = &depthRef;
 
-    return vkCreateRenderPass(device.getDevice(), &info, nullptr, &renderPass) == VK_SUCCESS;
+    std::array<VkAttachmentDescription, 2> atts = { colorAtt, depthAtt };
+
+    VkRenderPassCreateInfo ci{ VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO };
+    ci.attachmentCount = 2;
+    ci.pAttachments = atts.data();
+    ci.subpassCount = 1;
+    ci.pSubpasses = &sub;
+
+    return vkCreateRenderPass(dev, &ci, nullptr, &renderPass) == VK_SUCCESS;
 }
 
-void VulkanRenderPass::cleanup(VkDevice device) {
-    if (renderPass != VK_NULL_HANDLE) {
-        vkDestroyRenderPass(device, renderPass, nullptr);
-    }
+void VulkanRenderPass::cleanup(VkDevice dev) {
+    vkDestroyRenderPass(dev, renderPass, nullptr);
 }

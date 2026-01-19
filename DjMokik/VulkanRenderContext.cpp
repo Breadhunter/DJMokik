@@ -3,48 +3,44 @@
 
 bool VulkanRenderContext::init(Window& window) {
 
-    if (!instance.init("DjMokik")) {
-        std::cerr << "Failed to init Vulkan Instance!\n";
+    if (!instance.init("DjMokik"))
         return false;
-    }
 
-    if (!surface.init(instance.get(), window.get())) {
-        std::cerr << "Failed to create Vulkan Surface!\n";
+    if (!surface.init(instance.get(), window.get()))
         return false;
-    }
 
-    if (!device.init(instance.get(), surface.get())) {
-        std::cerr << "Failed to init Vulkan Device!\n";
+    if (!device.init(instance.get(), surface.get()))
         return false;
-    }
 
     if (!swapchain.init(
         device.getPhysicalDevice(),
         device.getDevice(),
         surface.get()
-    )) {
-        std::cerr << "Failed to init Vulkan Swapchain!\n";
+    ))
         return false;
-    }
 
-    if (!sync.init(device.getDevice())) {
-        std::cerr << "Failed to init Vulkan Sync!\n";
+    if (!renderPass.init(
+        device.getDevice(),
+        swapchain.getFormat(),
+        swapchain.getDepthFormat()
+    ))
         return false;
-    }
+
+    if (!swapchain.createFramebuffers(
+        device.getDevice(),
+        renderPass.get()
+    ))
+        return false;
+
+    if (!pipeline.init(device.getDevice(), renderPass.get()))
+        return false;
 
     if (!command.init(
         device.getDevice(),
         swapchain,
         device.getGraphicsQueueFamily()
-    )) {
-        std::cerr << "Failed to init Vulkan Command!\n";
+    ))
         return false;
-    }
-
-    if (!pipeline.init(device.getDevice(), swapchain.getRenderPass())) {
-        std::cerr << "Failed to create pipeline\n";
-        return false;
-    }
 
     return true;
 }

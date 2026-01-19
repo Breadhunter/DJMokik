@@ -19,6 +19,8 @@ public:
     VulkanSwapchain& getSwapchain() { return swapchain; }
     VulkanCommand& getCommand() { return command; }
     VulkanPipeline& getPipeline() { return pipeline; }
+    VulkanRenderPass& getRenderPass() { return renderPass; }
+
 
 private:
     VulkanInstance instance;
@@ -28,4 +30,5 @@ private:
     VulkanCommand command;
     VulkanSync sync;
     VulkanPipeline pipeline;
+    VulkanRenderPass renderPass; 
 };

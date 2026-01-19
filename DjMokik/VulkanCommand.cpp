@@ -43,8 +43,10 @@ void VulkanCommand::cleanup(VkDevice device) {
     }
 }
 
+// -------------- ВОТ ГЛАВНОЕ ИСПРАВЛЕНИЕ -----------------
 
 bool VulkanCommand::recordScene(
+    VkRenderPass renderPass,
     VulkanSwapchain& swapchain,
     VkPipeline pipeline,
     VkPipelineLayout layout,
@@ -64,21 +66,21 @@ bool VulkanCommand::recordScene(
 
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = swapchain.getRenderPass();
+        renderPassInfo.renderPass = renderPass;
         renderPassInfo.framebuffer = swapchain.getFramebuffer((uint32_t)i);
         renderPassInfo.renderArea.offset = { 0, 0 };
         renderPassInfo.renderArea.extent = swapchain.getExtent();
 
-        VkClearValue clearColor = { {0.1f, 0.1f, 0.1f, 1.0f} };
+        std::array<VkClearValue, 2> clearValues{};
+        clearValues[0].color = { 0.1f, 0.5f, 0.1f, 1.0f };
+        clearValues[1].depthStencil = { 1.0f, 0 };
 
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &clearColor;
+        renderPassInfo.clearValueCount = 2;
+        renderPassInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(cmd, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
-
-        // ---- ВОТ ГЛАВНОЕ ИСПРАВЛЕНИЕ ----
 
         VkViewport viewport{};
         viewport.x = 0.0f;
@@ -95,10 +97,6 @@ bool VulkanCommand::recordScene(
         scissor.extent = swapchain.getExtent();
 
         vkCmdSetScissor(cmd, 0, 1, &scissor);
-
-        vkCmdDraw(cmd, 3, 1, 0, 0);
-
-        // ----------------------------------
 
         for (auto& obj : objects) {
 
@@ -127,9 +125,3 @@ bool VulkanCommand::recordScene(
 
     return true;
 }
-
-
-
-
-
-

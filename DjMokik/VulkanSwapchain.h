@@ -5,23 +5,39 @@
 class VulkanSwapchain {
 public:
     bool init(VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface);
+    bool createFramebuffers(VkDevice device, VkRenderPass renderPass);
+
     void cleanup(VkDevice device);
 
     VkSwapchainKHR get() const { return swapchain; }
 
-    uint32_t getImageCount() const { return static_cast<uint32_t>(images.size()); }
-
-    VkFramebuffer getFramebuffer(uint32_t index) const { return framebuffers[index]; }
-    VkExtent2D getExtent() const { return extent; }
     VkFormat getFormat() const { return imageFormat; }
-    VkRenderPass getRenderPass() const { return renderPass; }
+    VkFormat getDepthFormat() const { return depthFormat; }
 
+    VkExtent2D getExtent() const { return extent; }
+
+    VkFramebuffer getFramebuffer(uint32_t index) const {
+        return framebuffers[index];
+    }
+
+    uint32_t getImageCount() const {
+        return static_cast<uint32_t>(images.size());
+    }
 
 private:
+    bool createDepthResources(VkPhysicalDevice physicalDevice, VkDevice device);
+    VkFormat findDepthFormat(VkPhysicalDevice physicalDevice);
+
     VkSwapchainKHR swapchain = VK_NULL_HANDLE;
+
     VkFormat imageFormat;
+    VkFormat depthFormat;
+
     VkExtent2D extent;
-    VkRenderPass renderPass = VK_NULL_HANDLE;
+
+    VkImage depthImage = VK_NULL_HANDLE;
+    VkDeviceMemory depthMemory = VK_NULL_HANDLE;
+    VkImageView depthImageView = VK_NULL_HANDLE;
 
     std::vector<VkImage> images;
     std::vector<VkImageView> imageViews;

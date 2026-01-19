@@ -8,21 +8,21 @@
 class VulkanCommandRecorder {
 public:
     void init(VulkanCommand& command);
-
-    bool record(
-        VulkanSwapchain& swapchain,
-        VulkanPipeline& pipeline,
-        VulkanMesh& mesh
-    );
+    void setRenderPass(VkRenderPass pass) {
+        renderPass = pass;
+    }
 
     bool recordScene(
-        VulkanSwapchain&,
-        VulkanPipeline&,
-        const std::vector<RenderObject>&
+        VkRenderPass renderPass,
+        VulkanSwapchain& swapchain,
+        VulkanPipeline& pipeline,
+        const std::vector<RenderObject>& objects
     );
 
 
 
 private:
     VulkanCommand* command = nullptr;
+    VkRenderPass renderPass;
+
 };

@@ -22,13 +22,12 @@ public:
     };
 
     bool recordScene(
+        VkRenderPass renderPass,
         VulkanSwapchain& swapchain,
         VkPipeline pipeline,
         VkPipelineLayout layout,
         const std::vector<RenderObject>& objects
     );
-
-
 
 
 private:
