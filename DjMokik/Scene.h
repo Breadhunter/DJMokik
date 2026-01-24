@@ -15,6 +15,7 @@ public:
 
     bool isDirty() const { return dirty; }
     void clearDirty() { dirty = false; }
+	void update(float deltaTime);
 
 private:
     std::vector<Entity> entities;

@@ -1,0 +1,28 @@
+#version 450
+
+layout(binding = 0) uniform UniformBufferObject {
+    mat4 model;
+    mat4 view;
+    mat4 proj;
+} ubo;
+
+layout(location = 0) in vec3 inPosition;
+
+layout(location = 0) out vec3 fragPos;
+layout(location = 1) out float height;
+
+void main() {
+    vec3 pos = inPosition;
+
+    // Генерируем "волны" по поверхности
+    float wave =
+        sin(pos.x * 4.0 + ubo.model[3][0]) * 0.1 +
+        cos(pos.y * 4.0 + ubo.model[3][1]) * 0.1;
+
+    pos.z += wave;
+
+    fragPos = pos;
+    height = wave;
+
+    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(pos, 1.0);
+}

@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "DemoSceneBuilder.h"
 #include <iostream>
+#include <chrono>
 
 bool Engine::init(Window& window) {
 
@@ -37,7 +38,7 @@ bool Engine::init(Window& window) {
 
 
 void Engine::run(Window& window) {
-
+    float time = 0.0f;
     while (!window.shouldClose()) {
         window.pollEvents();
 
@@ -45,6 +46,10 @@ void Engine::run(Window& window) {
             renderer.rebuildRenderObjects(scene);
             scene.clearDirty();
         }
+        float delta = calculateDeltaTime();
+        time += delta;
+
+        scene.update(delta);
 
         renderer.drawScene(scene);
     }
@@ -62,4 +67,21 @@ Scene& Engine::getScene() {
 
 VulkanRenderer& Engine::getRenderer() {
     return renderer;
+}
+
+float Engine::calculateDeltaTime() {
+
+    using clock = std::chrono::steady_clock;
+
+    auto now = clock::now();
+
+    if (lastTime.time_since_epoch().count() == 0) {
+        lastTime = now;
+        return 0.016f; // первый кадр ~60 FPS
+    }
+
+    std::chrono::duration<float> diff = now - lastTime;
+    lastTime = now;
+
+    return diff.count();
 }

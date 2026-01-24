@@ -16,12 +16,12 @@ void DemoSceneBuilder::build(
 
     VulkanMesh& mesh = meshManager.createMesh(device, vertices);
 
-    for (int i = 0; i < 88; i++) {
+    for (int i = 0; i < 1000; i++) {
         
 
         Entity& e = scene.createEntity(mesh);
 
-        e.transform.position = { 0.0f, 0.0f, 0.1f };
+        e.transform.position = { 0.0f, 0.0f, 0.0f };
 		e.transform.rotation = { i * 1.0f, i * 1.0f, i * 1.0f };
     }
 }

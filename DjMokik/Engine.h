@@ -4,6 +4,7 @@
 #include "VulkanRenderer.h"
 #include "Scene.h"
 #include "Window.h"
+#include <chrono>
 
 
 class Engine {
@@ -19,4 +20,8 @@ private:
     VulkanRenderContext context;
     VulkanRenderer renderer;
     Scene scene;
+
+    float calculateDeltaTime();
+
+    std::chrono::steady_clock::time_point lastTime;
 };

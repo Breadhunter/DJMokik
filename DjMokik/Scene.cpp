@@ -16,3 +16,11 @@ std::vector<Entity>& Scene::getEntities() {
 const std::vector<Entity>& Scene::getEntities() const {
     return entities;
 }
+
+void Scene::update(float deltaTime) {
+
+    for (auto& e : entities) {
+        e.transform.rotation.y += deltaTime;
+        e.transform.rotation.x += deltaTime * 0.5f;
+    }
+}
